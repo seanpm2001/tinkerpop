@@ -47,25 +47,28 @@ in each release line represent unreleased changes only. Once an official release
 are removed with new items taking their place as they are planned. The release line is removed from the roadmap
 completely when it is no longer maintained.
 
-== 3.7.x - Target 2023H1
+== 4.x - Target 2024
 
-The development of the 3.7.x release line is currently under way with a target release date for the initial release of
-the line of 23H1.
+The development of the 4.x release line is currently under way with a target release date for the initial release of
+the line of 2024.
 
 * Add support for traversals as parameters for `V()`, `is()`, and `has()` (includes `Traversal` arguments to `P`)
 * Geospatial support for TinkerPop (link:++https://lists.apache.org/list?dev@tinkerpop.apache.org:2021-7:DISCUSS%20geo-spatial++[DISCUSS Thread])
-* Add mid-traversal `E()` support (link:https://issues.apache.org/jira/browse/TINKERPOP-2798[TINKERPOP-2798])
-* Allow properties on elements (as opposed to just references) for remote traversals
 * Add subgraph/tree structure in all GLVs
-* List functions (`concat()`/etc.)
 * Define semantics for query federation across Gremlin servers (depends on `call()` step)
 * Gremlin debug support
-* Date/Time manipulation functions (`dateAdd()`, `dateDiff()`, etc.)
-* Add string manipulation functions (`split()`, `substring()` etc.) (link:https://issues.apache.org/jira/browse/TINKERPOP-2672[TINKERPOP-2672])
 * Case-insensitive search (link:https://issues.apache.org/jira/browse/TINKERPOP-2673[TINKERPOP-2673])
 * Type conversion with `cast()` step
 * Mutation steps for `clone()` of an `Element` and for `moveE()` for edges.
-* Add a language element to merge `Map` objects more easily.
+* *Transactions* - Redesign the transaction model so that it is better suited for all graphs.
+** Ensure that there is no difference between remote and embedded transaction usage and that the API is less tangled
+than it is today.
+* *Groovy* - Reconsider all dependencies on Groovy throughout TinkerPop
+** Remove Groovy support from Gremlin Server which should be possible now that `gremlin-language` and `call()` are
+available.
+** Investigate options for using JShell as a replacement for `groovysh` in Gremlin Console.
+** Investigate options for removing `ScriptEngine` support in general, which would include support from
+`gremlin-language`.
 
 = Proposals
 
@@ -95,40 +98,5 @@ story.
 [width="100%",cols="3,10,2,^1",options="header"]
 |=========================================================
 |Proposal |Description |Targets |Resolved
-|link:https://github.com/apache/tinkerpop/blob/master/docs/src/dev/future/proposal-equality-1.asciidoc[Proposal 1] |Equality, Equivalence, Comparability and Orderability Semantics - Documents existing Gremlin semantics along with clarifications for ambiguous behaviors and recommendations for consistency. |3.6.0 |N
-|link:https://github.com/apache/tinkerpop/blob/master/docs/src/dev/future/proposal-arrow-flight-2[Proposal 2] |Gremlin Arrow Flight. |4.0.0 |N
-|link:https://github.com/apache/tinkerpop/blob/master/docs/src/dev/future/proposal-3-remove-closures[Proposal 3] |Removing the Need for Closures/Lambda in Gremlin |3.7.0 |N
+|link:https://github.com/apache/tinkerpop/blob/master/docs/src/dev/future/proposal-arrow-flight-1[Proposal 1] |Gremlin Arrow Flight. |Future |N
 |=========================================================
-
-= Appendix
-
-== TinkerPop4
-
-This space is currently a bit of a scratchpad for ideas and changes that might not fit well into TinkerPop3 and
-therefore might be best left to TinkerPop4.
-
-* *Transactions* - Redesign the transaction model so that it is better suited for all graphs.
-** Ensure that TinkerPop has a native implementation for transactions in TinkerGraph so that all tests can run from it.
-** Ensure that there is no difference between remote and embedded transaction usage and that the API is less tangled
-than it is today.
-* *Groovy* - Reconsider all dependencies on Groovy throughout TinkerPop
-** Remove Groovy support from Gremlin Server which should be possible now that `gremlin-language` and `call()` are
-available.
-** Investigate options for using JShell as a replacement for `groovysh` in Gremlin Console.
-** Investigate options for removing `ScriptEngine` support in general, which would include support from
-`gremlin-language`.
-
-=== 4.x Branching Methodology
-
-Development of 4.x occurs on the `4.0-dev` branch. This branch was created as an orphan branch and therefore has no
-history tied to any other branch in the repo including master. As such, there is no need to merge/rebase `4.0-dev`. When
-it comes time to promote `4.0-dev` to `master` the procedure for doing so will be to:
-
-1. Create a `3.x-master` branch from `master`
-1. Delete all content from `master` in one commit
-1. Rebase `4.0-dev` on `master`
-1. Merge `4.0-dev` to `master` and push
-
-From this point 3.x development will occur on `3.x-master` and 4.x development occurs on `master` (with the same version
-branching as we have now, e.g `3.3-dev`, `4.1-dev`, etc.) The `3.x-master` branch changes will likely still merge to
-`master`, but will all merge as no-op changes.
